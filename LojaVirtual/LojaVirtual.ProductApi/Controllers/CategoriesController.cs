@@ -1,5 +1,7 @@
 ﻿using LojaVirtual.ProductApi.DTOs;
+using LojaVirtual.ProductApi.Roles;
 using LojaVirtual.ProductApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +9,7 @@ namespace LojaVirtual.ProductApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
@@ -71,6 +74,7 @@ namespace LojaVirtual.ProductApi.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = Role.Admin)]
         public async Task<ActionResult> Delete(int id)
         {
             var categoryDto = await _categoryService.GetCategoryById(id);
