@@ -1,7 +1,5 @@
 ﻿using LojaVirtual.ProductApi.DTOs;
-using LojaVirtual.ProductApi.Roles;
 using LojaVirtual.ProductApi.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +7,6 @@ namespace LojaVirtual.ProductApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -50,9 +47,12 @@ namespace LojaVirtual.ProductApi.Controllers
             return new CreatedAtRouteResult("GetProducts", new { id = productsDto.Id }, productsDto);
         }
 
-        [HttpPut()]
-        public async Task<ActionResult> Put([FromBody] ProductDTO productsDto)
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> Put(int id, [FromBody] ProductDTO productsDto)
         {
+            if (id != productsDto.Id)
+                return BadRequest();
+
             if (productsDto is null)
                 return BadRequest();
 
@@ -61,7 +61,6 @@ namespace LojaVirtual.ProductApi.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        [Authorize(Roles = Role.Admin)]
         public async Task<ActionResult> Delete(int id)
         {
             var productsDto = await _productService.GetProductsById(id);

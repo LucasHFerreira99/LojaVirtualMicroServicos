@@ -14,12 +14,12 @@ namespace LojaVirtual.ProductApi.Repositories
 
         public async Task<IEnumerable<Product>> GetAll()
         {
-            return await _context.Products.Include(c=> c.Category).ToListAsync();
+            return await _context.Products.ToListAsync();
         }
 
         public  async Task<Product> GetById(int id)
         {
-            return await _context.Products.Include(c=> c.Category).FirstOrDefaultAsync(c => c.Id == id);
+            return await _context.Products.FirstOrDefaultAsync(c => c.Id == id);
         }
         public async Task<Product> Create(Product product)
         {
